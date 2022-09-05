@@ -3,6 +3,8 @@ import 'package:bootcamp_app/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'controller/blog/favorite_blog_list_controller.dart';
+
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -19,6 +21,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     super.initState();
     ref.read(blogsListProvider.notifier).fetchBlogsList();
+    ref.read(favoriteBlogsListProvider.notifier).fetchFavoriteBlogsList();
   }
 
   @override

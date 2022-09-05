@@ -6,6 +6,11 @@ class BlogsListSuccessState extends SuccessState {
   const BlogsListSuccessState(this.blogsList);
 }
 
+class FavoriteBlogsListSuccessState extends SuccessState {
+  final List<BlogModel> favoriteBlogsList;
+  const FavoriteBlogsListSuccessState(this.favoriteBlogsList);
+}
+
 class BlogDetailsSuccessState extends SuccessState {
   final BlogModel blogModel;
   const BlogDetailsSuccessState(this.blogModel);

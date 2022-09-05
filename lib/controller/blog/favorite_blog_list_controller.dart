@@ -5,30 +5,31 @@ import 'package:bootcamp_app/network/endpoints.dart';
 import 'package:bootcamp_app/network/network_utils.dart';
 import 'package:riverpod/riverpod.dart';
 
-final blogsListProvider = StateNotifierProvider<BlogsListController, BaseState>(
-  (ref) => BlogsListController(ref: ref),
+final favoriteBlogsListProvider =
+    StateNotifierProvider<FavoriteBlogsListController, BaseState>(
+  (ref) => FavoriteBlogsListController(ref: ref),
 );
 
-class BlogsListController extends StateNotifier<BaseState> {
+class FavoriteBlogsListController extends StateNotifier<BaseState> {
   final Ref? ref;
-  BlogsListController({this.ref}) : super(const InitialState());
+  FavoriteBlogsListController({this.ref}) : super(const InitialState());
 
-  List<BlogModel> blogsList = [];
+  List<BlogModel> favoriteBlogsList = [];
 
-  Future fetchBlogsList() async {
+  Future fetchFavoriteBlogsList() async {
     state = const LoadingState();
     dynamic responseBody;
 
     try {
       responseBody = await Network.handleResponse(
-        await Network.getRequest(API.getAllBlogs),
+        await Network.getRequest(API.getAllFavoriteBlogs),
       );
       if (responseBody != null) {
-        blogsList = (responseBody['data'] as List<dynamic>)
+        favoriteBlogsList = (responseBody['data'] as List<dynamic>)
             .map((x) => BlogModel.fromJson(x))
             .toList();
 
-        state = BlogsListSuccessState(blogsList);
+        state = FavoriteBlogsListSuccessState(favoriteBlogsList);
       } else {
         state = const ErrorState();
       }
