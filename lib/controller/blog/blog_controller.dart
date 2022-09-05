@@ -34,10 +34,12 @@ class BlogController extends StateNotifier<BaseState> {
         BlogModel createdBlog = BlogModel.fromJson(responseBody['student']);
         print('createdBlog = $createdBlog');
 
-        List<BlogModel> blogsList = ref!.read(blogsListProvider.notifier).blogsList;
+        List<BlogModel> blogsList =
+            ref!.read(blogsListProvider.notifier).blogsList;
         blogsList.add(createdBlog);
 
-        ref!.read(blogsListProvider.notifier).state = BlogsListSuccessState(blogsList);
+        ref!.read(blogsListProvider.notifier).state =
+            BlogsListSuccessState(blogsList);
 
         state = const BlogSuccessState();
       } else {
@@ -73,7 +75,8 @@ class BlogController extends StateNotifier<BaseState> {
         blogData.description = description;
         blogData.image = image;
 
-        ref!.read(blogDetailsProvider.notifier).state = BlogDetailsSuccessState(blogData);
+        ref!.read(blogDetailsProvider.notifier).state =
+            BlogDetailsSuccessState(blogData);
 
         state = const BlogSuccessState();
       } else {
@@ -81,6 +84,43 @@ class BlogController extends StateNotifier<BaseState> {
       }
     } catch (error, stackTrace) {
       print('updateBlog() error = $error');
+      print(stackTrace);
+      state = const ErrorState();
+    }
+  }
+
+  Future isFavoriteBlog({blogId, is_favorite}) async {
+    state = const LoadingState();
+
+    dynamic requestBody = {
+      'id': blogId,
+      'is_favorite': is_favorite,
+    };
+    dynamic responseBody;
+
+    try {
+      responseBody = await Network.handleResponse(
+        await Network.postRequest(API.updateFavoriteBlog, requestBody),
+      );
+
+      if (responseBody != null || responseBody == '') {
+        BlogModel isFavoriteBlog =
+            BlogModel.fromJson(responseBody['student'][0]);
+        print('isFavoriteBlog = ${isFavoriteBlog.isFavorite}');
+
+        List<BlogModel> blogsList =
+            ref!.read(blogsListProvider.notifier).blogsList;
+        blogsList.add(isFavoriteBlog);
+
+        ref!.read(blogsListProvider.notifier).state =
+            BlogsListSuccessState(blogsList);
+
+        state = const BlogSuccessState();
+      } else {
+        state = const ErrorState();
+      }
+    } catch (error, stackTrace) {
+      print('isFavoriteBlog() error = $error');
       print(stackTrace);
       state = const ErrorState();
     }
@@ -97,10 +137,12 @@ class BlogController extends StateNotifier<BaseState> {
         await Network.postRequest(API.deleteBlog(blogId: blogId), requestBody),
       );
       if (responseBody != null) {
-        List<BlogModel> blogsList = ref!.read(blogsListProvider.notifier).blogsList;
+        List<BlogModel> blogsList =
+            ref!.read(blogsListProvider.notifier).blogsList;
         blogsList.removeWhere((element) => element.id == blogId);
 
-        ref!.read(blogsListProvider.notifier).state = BlogsListSuccessState(blogsList);
+        ref!.read(blogsListProvider.notifier).state =
+            BlogsListSuccessState(blogsList);
         state = const BlogSuccessState();
       } else {
         state = const ErrorState();

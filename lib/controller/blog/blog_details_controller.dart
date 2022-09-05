@@ -5,7 +5,8 @@ import 'package:bootcamp_app/network/endpoints.dart';
 import 'package:bootcamp_app/network/network_utils.dart';
 import 'package:riverpod/riverpod.dart';
 
-final blogDetailsProvider = StateNotifierProvider<BlogDetailsController, BaseState>(
+final blogDetailsProvider =
+    StateNotifierProvider<BlogDetailsController, BaseState>(
   (ref) => BlogDetailsController(ref: ref),
 );
 

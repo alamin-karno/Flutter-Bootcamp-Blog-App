@@ -1,3 +1,4 @@
+import 'package:bootcamp_app/controller/blog/blog_controller.dart';
 import 'package:bootcamp_app/controller/blog/blogs_list_controller.dart';
 import 'package:bootcamp_app/controller/blog/state/blog_state.dart';
 import 'package:bootcamp_app/views/screens/components/blog_card.dart';
@@ -17,13 +18,30 @@ class _BlogsListScreenState extends ConsumerState<BlogsListScreen> {
   @override
   Widget build(BuildContext context) {
     final blogsListState = ref.watch(blogsListProvider);
-    final blogsList = blogsListState is BlogsListSuccessState ? blogsListState.blogsList : [];
+    var blogsList =
+        blogsListState is BlogsListSuccessState ? blogsListState.blogsList : [];
+
+    ref.listen(
+      blogProvider,
+      (_, state) {
+        if (state is BlogSuccessState) {
+          setState(() {
+            final blogsListState = ref.watch(blogsListProvider);
+            blogsList = blogsListState is BlogsListSuccessState
+                ? blogsListState.blogsList
+                : [];
+          });
+        }
+      },
+    );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Blog App')),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, CupertinoPageRoute(builder: (context) => const CreateUpdateBlogScreen()));
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => const CreateUpdateBlogScreen()));
         },
         child: const Icon(Icons.add),
       ),
@@ -31,7 +49,21 @@ class _BlogsListScreenState extends ConsumerState<BlogsListScreen> {
           ? ListView.builder(
               itemCount: blogsList.length,
               itemBuilder: (BuildContext context, int index) {
-                return BlogCard(blogModel: blogsList[index]);
+                return BlogCard(
+                  blogModel: blogsList[index],
+                  onFavoritePress: () async {
+                    int value;
+                    if (blogsList[index].isFavorite == 0) {
+                      value = 1;
+                    } else {
+                      value = 0;
+                    }
+                    await ref.read(blogProvider.notifier).isFavoriteBlog(
+                          blogId: blogsList[index].id,
+                          is_favorite: value,
+                        );
+                  },
+                );
               },
             )
           : const Center(child: CircularProgressIndicator()),

@@ -6,16 +6,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BlogCard extends ConsumerWidget {
-  const BlogCard({Key? key, required this.blogModel}) : super(key: key);
+  const BlogCard({
+    Key? key,
+    required this.blogModel,
+    required this.onFavoritePress,
+  }) : super(key: key);
 
   final BlogModel blogModel;
+  final Function() onFavoritePress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
-        ref.read(blogDetailsProvider.notifier).fetchBlogDetails(blogId: blogModel.id!);
-        Navigator.push(context, CupertinoPageRoute(builder: (context) => const BlogDetailsScreen()));
+        ref
+            .read(blogDetailsProvider.notifier)
+            .fetchBlogDetails(blogId: blogModel.id!);
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => const BlogDetailsScreen()));
       },
       child: Container(
         padding: const EdgeInsets.all(15),
@@ -34,9 +44,23 @@ class BlogCard extends ConsumerWidget {
               },
             ),
             const SizedBox(height: 10),
-            Text(
-              blogModel.createdAt,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  blogModel.createdAt,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                IconButton(
+                  onPressed: onFavoritePress,
+                  icon: Icon(
+                    blogModel.isFavorite == 1
+                        ? Icons.favorite
+                        : Icons.favorite_border_outlined,
+                    color: blogModel.isFavorite == 1 ? Colors.red : Colors.grey,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 5),
             Text(

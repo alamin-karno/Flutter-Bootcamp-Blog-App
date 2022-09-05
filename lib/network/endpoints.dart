@@ -5,6 +5,7 @@ class API {
   static getBlogDetails({blogId}) => 'get-blog-details/$blogId';
   static const createBlog = 'create-blog';
   static const updateBlog = 'update-blog';
+  static const updateFavoriteBlog = 'update-favorite-blog';
   static deleteBlog({blogId}) => 'remove-blog/$blogId';
   static const uploadImage = 'upload-image';
 }

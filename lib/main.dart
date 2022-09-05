@@ -1,5 +1,5 @@
 import 'package:bootcamp_app/controller/blog/blogs_list_controller.dart';
-import 'package:bootcamp_app/views/screens/blog_list_screen.dart';
+import 'package:bootcamp_app/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +28,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Blog Project for Bootcamp',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const BlogsListScreen(),
+      home: const HomeScreen(),
     );
   }
 }
