@@ -21,20 +21,6 @@ class _BlogsListScreenState extends ConsumerState<BlogsListScreen> {
     var blogsList =
         blogsListState is BlogsListSuccessState ? blogsListState.blogsList : [];
 
-    ref.listen(
-      blogProvider,
-      (_, state) {
-        if (state is BlogSuccessState) {
-          setState(() {
-            final blogsListState = ref.watch(blogsListProvider);
-            blogsList = blogsListState is BlogsListSuccessState
-                ? blogsListState.blogsList
-                : [];
-          });
-        }
-      },
-    );
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -62,6 +48,8 @@ class _BlogsListScreenState extends ConsumerState<BlogsListScreen> {
                           blogId: blogsList[index].id,
                           is_favorite: value,
                         );
+
+                    ref.read(blogsListProvider.notifier).fetchBlogsList();
                   },
                 );
               },
